@@ -1,7 +1,7 @@
 {
   "functions": {
     "api_folder/*.js": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs18"
     }
   },
   "routes": [
