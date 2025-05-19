@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Favorites</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+  <style>
+    .swiper {
+      width: 80%;
+      height: 300px;
+      margin: 20px auto;
+    }
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <h1>Saved Cat Pics</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="help.html">Help</a>
+    <a href="favorites.html">Favorites</a>
+  </nav>
+
+  <h2>Saved Cat Count</h2>
+  <canvas id="catChart" width="400" height="200"></canvas>
+
+  <h2>Slide View</h2>
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper" id="swiper-wrapper"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <h2>All Saved Images</h2>
+  <div id="favorites-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('favorites-container');
+      const wrapper = document.getElementById('swiper-wrapper');
+      const chartCanvas = document.getElementById('catChart');
+
+      fetch('/api/get-favorites')
+        .then(res => res.json())
+        .then(data => {
+          if (data.length === 0) {
+            container.innerHTML = '<p>No favorites yet.</p>';
+          } else {
+            data.forEach(entry => {
+              const img = document.createElement('img');
+              img.src = entry.url;
+              img.style.maxWidth = '300px';
+              img.style.margin = '10px';
+              container.appendChild(img);
+
+              const slide = document.createElement('div');
+              slide.className = 'swiper-slide';
+              const slideImg = document.createElement('img');
+              slideImg.src = entry.url;
+              slide.appendChild(slideImg);
+              wrapper.appendChild(slide);
+            });
+
+            const ctx = chartCanvas.getContext('2d');
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Saved Cats'],
+                datasets: [{
+                  label: 'Number of Saved Cats',
+                  data: [data.length],
+                  backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: { beginAtZero: true }
+                }
+              }
+            });
+
+            new Swiper('.mySwiper', {
+              slidesPerView: 1,
+              spaceBetween: 10,
+              loop: true,
+              pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load favorites:', err);
+          container.innerHTML = '<p>Error loading favorites.</p>';
+        });
+    });
+  </script>
+</body>
+</html>

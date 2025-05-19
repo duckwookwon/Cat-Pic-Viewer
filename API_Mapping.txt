@@ -1,0 +1,16 @@
+API Mapping for Cat Image Viewer
+
+Pages and Data:
+- Main Page: Shows a random cat picture from TheCatAPI. Has a button to get a new picture and save as favorite.
+- About Page: Text on app purpose, problem, and features.
+- Help Page: Text on how to use app and TheCatAPI info.
+
+API Used:
+- TheCatAPI (https://api.thecatapi.com/v1/images/search)
+  - Needs API key.
+  - Uses HTTPS.
+
+What the API Does:
+- TheCatAPI provides random cat images.
+- The /v1/images/search returns JSON with image URL and ID.
+- Main Page uses it to show a new cat picture on button click.
