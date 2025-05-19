@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api_folder/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api_folder/$1.js" }
+  ]
+}
